@@ -1,0 +1,36 @@
+seed: 42
+data:
+  path: data/processed/gse102349.csv
+  feature_columns: [ebv_dna, t_stage, n_stage, age, sex]
+  time_column: time
+  event_column: event
+  train_fraction: 0.60
+  validation_fraction: 0.15
+  batch_size: 88
+model:
+  feature_dim: 5
+  encoder_width: 128
+  encoder_depth: 4
+  hyper_width: 64
+  hyper_depth: 3
+  hyper_dropout: 0.1
+  state_dim: 6
+  parameter_dim: 22
+training:
+  phases:
+    - {name: population, epochs: 500, ode_weight: 1.0, survival_weight: 0.1}
+    - {name: patient, epochs: 300, ode_weight: 1.0, survival_weight: 0.5}
+    - {name: refinement, epochs: 200, ode_weight: 1.0, survival_weight: 1.0}
+  data_weight: 1.0
+  boundary_weight: 1.0
+  learning_rate: 0.001
+  weight_decay: 0.0001
+  collocation_points: 500
+  optimizer: AdamW
+  accelerator: auto
+  precision: float32
+evaluation:
+  horizons_months: [12, 36, 60]
+  bootstrap_iterations: 1000
+  seeds: [42, 123, 256, 389, 512, 678, 741, 853, 927, 1024, 1111, 1337, 1500, 1729, 2000, 2222, 2468, 2719, 3000, 3141]
+
